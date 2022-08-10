@@ -3,7 +3,7 @@ import { ReactComponent as DeleteIcon } from '../assets/svg/deleteIcon.svg'
 import bedIcon from '../assets/svg/bedIcon.svg'
 import bathtubIcon from '../assets/svg/bathtubIcon.svg'
 
-function ListingItem({ listing, id }) {
+function ListingItem({ listing, id, onDelete }) {
   return (
     <li className='categoryListing'>
       <Link
@@ -20,6 +20,7 @@ function ListingItem({ listing, id }) {
             {listing.location}
           </p>
           <p className="categoryListingName">{listing.name}</p>
+          {/* Listing price */}
           <p className="categoryListingPrice">
             ${ listing.offer
               ? listing.discountedPrice
@@ -32,13 +33,14 @@ function ListingItem({ listing, id }) {
           </p>
 
           <div className="categoryListingInfoDiv">
+            {/* No. of beds */}
             <img src={bedIcon} alt="bed" />
             <p className="categoryListingInfoText">
               {listing.bedrooms > 1
                 ? `${listing.bedrooms} Bedrooms`
                 : '1 Bedroom'}
             </p>
-
+            {/* No. of bathrooms */}
             <img src={bathtubIcon} alt="bath" />
             <p className="categoryListingInfoText">
               {listing.bathrooms > 1
@@ -48,6 +50,13 @@ function ListingItem({ listing, id }) {
           </div>
         </div>
       </Link>
+
+      { onDelete && (
+        <DeleteIcon
+          className='removeIcon'
+          fill='rgb(231, 76, 60)'
+          onClick={() => onDelete(listing.id, listing.name)}/>
+      )}
     </li>
   )
 }
