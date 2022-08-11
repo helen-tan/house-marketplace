@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import Spinner from '../components/Spinner'
+import { toast } from 'react-toastify'
 
 function CreateListing() {
   const [geolocationEnabled, setGeolocationEnabled] = useState(true)
@@ -60,7 +61,16 @@ function CreateListing() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(formData)
+
+    setLoading(true)
+    // Check that discounted price must be less than regular price
+    if (discountedPrice >= regularPrice) {
+      setLoading(false)
+      toast.error('Discounted price needs to be less than the regular price')
+      return
+    }
+
+
   }
 
   // Executes when we click on one of the form fields
