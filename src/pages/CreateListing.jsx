@@ -60,10 +60,36 @@ function CreateListing() {
 
   const onSubmit = (e) => {
     e.preventDefault()
+    console.log(formData)
   }
 
+  // Executes when we click on one of the form fields
+  // In our form it executes when we: click button, type in text field, or when we submit a file
   const onMutate = (e) => {
+    let boolean = null
+    // for boolean buttons
+    if (e.target.value === 'true') {
+      boolean = true
+    }
+    if (e.target.value === 'false') {
+      boolean = false
+    }
+    // Files
+    if (e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        images: e.target.files
+      }) )
+    }
 
+    // Text/Booleans/Numbers
+    if (!e.target.files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [e.target.id]: boolean ?? e.target.value
+      }))
+      // if the value is not a boolean (i.e. a null), then it will be assigned the right side value (which is whatever typed in the text field)
+    }
   }
 
   if(loading) {
