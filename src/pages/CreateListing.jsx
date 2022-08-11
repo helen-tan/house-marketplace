@@ -5,7 +5,7 @@ import Spinner from '../components/Spinner'
 import { toast } from 'react-toastify'
 
 function CreateListing() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
+  const [geolocationEnabled, setGeolocationEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     type: 'rent',
@@ -76,6 +76,19 @@ function CreateListing() {
       toast.error('You can only upload a maximum of 6 images')
       return
     }
+
+    let geolocation = {} // In firestore db, each listing has a property geolocation: { lat: num, lng: num }
+    let location
+
+    if (geolocationEnabled) {
+      // Not using geolocation for this project
+    } else {
+      geolocation.lat = latitude
+      geolocation.lng = longitude
+      location = address
+    }
+
+    setLoading(false)
   }
 
   // Executes when we click on one of the form fields
