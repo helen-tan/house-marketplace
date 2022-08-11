@@ -70,7 +70,12 @@ function CreateListing() {
       return
     }
 
-
+    // Check that not more than 6 images are uploaded
+    if (images.length > 6) {
+      setLoading(false)
+      toast.error('You can only upload a maximum of 6 images')
+      return
+    }
   }
 
   // Executes when we click on one of the form fields
