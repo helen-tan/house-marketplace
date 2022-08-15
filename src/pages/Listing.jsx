@@ -15,6 +15,7 @@ function Listing() {
   const params = useParams()
   const auth = getAuth()
 
+  // Fetch data of single listing from firestore DB
   useEffect(() => {
     const fetchListing = async () => {
       const docRef = doc(db, 'listings', params.listingId)
@@ -30,8 +31,27 @@ function Listing() {
     fetchListing()
   }, [navigate, params.listingId])
 
+  if(loading) {
+    return <Spinner />
+  }
+
   return (
-    <div>Listing</div>
+    <main>
+      {/* Slider */}
+
+      {/* Share Icon */}
+      <div className="shareIconDiv" onClick={() => {
+        navigator.clipboard.writeText(window.location.href) // Copy link to clipboard
+        setShareLinkCopied(true)
+        setTimeout(() => {
+          setShareLinkCopied(false)
+        }, 2000)
+      }}>
+        <img src={shareIcon} alt="Share Icon" />
+      </div>
+
+      {shareLinkCopied && <p className='linkCopied'>Link Copied!</p>}
+    </main>
   )
 }
 
