@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 
 function CreateListing() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(false)
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     type: 'rent',
@@ -91,13 +91,31 @@ function CreateListing() {
     let location
 
     if (geolocationEnabled) {
-      // Not using geolocation for this project
+      // Make request to MapBox API
+      const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${process.env.REACT_APP_MAPBOX_API_KEY}`)
+      const data = await response.json()
+
+      //console.log(data)
+      geolocation.lat = data.features[0]?.geometry.coordinates[0] ?? 0
+      geolocation.lng = data.features[0]?.geometry.coordinates[1] ?? 0
+
+      location = data.features[0]?.place_name ?? undefined
+
+      if (location === undefined || location.includes('undefined')) {
+        setLoading(false)
+        toast.error('Please enter a correct address')
+        return
+      }
+
+
     } else {
       geolocation.lat = latitude
       geolocation.lng = longitude
     }
+    setLoading(false)
 
     // Store images in Firebase
+
     const storeImage = async (image) => {
       return new Promise((resolve, reject) => {
         const storage = getStorage()
