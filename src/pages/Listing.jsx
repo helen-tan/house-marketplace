@@ -5,6 +5,7 @@ import { getAuth } from 'firebase/auth'
 import { db } from '../firebase.config'
 import Spinner from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
+import mapboxgl from 'mapbox-gl';
 
 function Listing() {
   const [listing, setListing] = useState(null)
