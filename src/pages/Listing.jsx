@@ -90,6 +90,13 @@ function Listing() {
           <p className="listingLocationTitle">Location</p>
 
           {/* Map */}
+
+          {/* Contact button to show if listing does not belong to user */}
+          {auth.currentUser?.uid !== listing.userRef && (
+            <Link to={`/contact/${listing.userRef}?listingName=${listing.name}&listingLocation=${listing.location}`} className='primaryButton'>
+              Contact Landlord
+            </Link>
+          )}
         </ul>
       </div>
     </main>
