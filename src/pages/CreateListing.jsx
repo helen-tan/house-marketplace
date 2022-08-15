@@ -112,10 +112,8 @@ function CreateListing() {
       geolocation.lat = latitude
       geolocation.lng = longitude
     }
-    setLoading(false)
 
     // Store images in Firebase
-
     const storeImage = async (image) => {
       return new Promise((resolve, reject) => {
         const storage = getStorage()
@@ -163,7 +161,9 @@ function CreateListing() {
       return
     })
 
-    //console.log(imageUrls)
+    console.log(imageUrls)
+
+    setLoading(false)
 
     // object that we will submit to the database
     const formDataCopy = {
@@ -176,7 +176,7 @@ function CreateListing() {
     formDataCopy.location = address
     delete formDataCopy.images
     delete formDataCopy.address
-    !formDataCopy.offer && delete formDataCopy.discountedPrice
+    !formDataCopy.offer && delete formDataCopy.discountedPrice // if no offer, delete discountedPrice from object
 
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
     setLoading(false)
