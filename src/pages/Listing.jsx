@@ -5,7 +5,8 @@ import { getAuth } from 'firebase/auth'
 import { db } from '../firebase.config'
 import Spinner from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
-import mapboxgl from 'mapbox-gl';
+import Map, { Marker } from 'react-map-gl'
+import mapboxgl from 'mapbox-gl'
 
 function Listing() {
   const [listing, setListing] = useState(null)
@@ -22,8 +23,7 @@ function Listing() {
       const docRef = doc(db, 'listings', params.listingId)
       const docSnap = await getDoc(docRef)
 
-      if(docSnap.exists()) {
-        console.log(docSnap.data())
+      if (docSnap.exists()) {
         setListing(docSnap.data())
         setLoading(false)
       }
@@ -32,7 +32,8 @@ function Listing() {
     fetchListing()
   }, [navigate, params.listingId])
 
-  if(loading) {
+
+  if (loading) {
     return <Spinner />
   }
 
@@ -56,12 +57,12 @@ function Listing() {
       <div className="listingDetails">
         <p className="listingName">
           {listing.name} - ${listing.offer
-                              ? listing.discountedPrice
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                              : listing.regularPrice
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            ? listing.discountedPrice
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            : listing.regularPrice
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
         </p>
         <p className="listingLocation">{listing.location}</p>
         <p className="listingType">
@@ -91,6 +92,19 @@ function Listing() {
           <p className="listingLocationTitle">Location</p>
 
           {/* Map */}
+          <Map
+            mapboxAccessToken={process.env.REACT_APP_MAPBOX_API_KEY}
+            initialViewState={{
+              longitude: listing.geolocation.lng,
+              latitude: listing.geolocation.lat,
+              zoom: 13
+            }}
+            style={{width: 600, height: 400}}
+            mapStyle="mapbox://styles/mapbox/streets-v9"
+          >
+
+          </Map>
+
 
           {/* Contact button to show if listing does not belong to user */}
           {auth.currentUser?.uid !== listing.userRef && (
