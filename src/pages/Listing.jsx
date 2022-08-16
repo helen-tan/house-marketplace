@@ -5,13 +5,15 @@ import { getAuth } from 'firebase/auth'
 import { db } from '../firebase.config'
 import Spinner from '../components/Spinner'
 import shareIcon from '../assets/svg/shareIcon.svg'
-import Map, { Marker } from 'react-map-gl'
+import Map, { Marker, NavigationControl, Popup } from 'react-map-gl'
 import mapboxgl from 'mapbox-gl'
+import { FaMapMarkerAlt } from 'react-icons/fa'
 
 function Listing() {
   const [listing, setListing] = useState(null)
   const [loading, setLoading] = useState(true)
   const [shareLinkCopied, setShareLinkCopied] = useState(false)
+  const [markerClicked, setMarkerClicked] = useState(true)
 
   const navigate = useNavigate()
   const params = useParams()
@@ -92,18 +94,30 @@ function Listing() {
           <p className="listingLocationTitle">Location</p>
 
           {/* Map */}
-          <Map
-            mapboxAccessToken={process.env.REACT_APP_MAPBOX_API_KEY}
-            initialViewState={{
-              longitude: listing.geolocation.lng,
-              latitude: listing.geolocation.lat,
-              zoom: 13
-            }}
-            style={{width: 600, height: 400}}
-            mapStyle="mapbox://styles/mapbox/streets-v9"
-          >
+          <div className="leafletContainer">
+            <Map
+              mapboxAccessToken={process.env.REACT_APP_MAPBOX_API_KEY}
+              initialViewState={{
+                longitude: listing.geolocation.lng,
+                latitude: listing.geolocation.lat,
+                zoom: 13
+              }}
+              style={{width: 600, height: 400}}
+              mapStyle="mapbox://styles/mapbox/streets-v11"
+            >
+              <Marker anchor='center' latitude={listing.geolocation.lat} longitude={listing.geolocation.lng} onClick={() => {setMarkerClicked(!markerClicked)}}>
+                  <FaMapMarkerAlt color="red" size="3em"/>
+              </Marker>
 
-          </Map>
+              {markerClicked && (
+                <Popup latitude={listing.geolocation.lat} longitude={listing.geolocation.lng} closeOnClick={false} >
+                  <div>{listing.location}</div>
+                </Popup>
+              )}
+
+              <NavigationControl position='top-left' showCompass={false}/>
+            </Map>
+          </div>
 
 
           {/* Contact button to show if listing does not belong to user */}
