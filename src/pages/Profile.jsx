@@ -23,6 +23,7 @@ function Profile() {
 
   const navigate = useNavigate()
 
+  // Fetch user's listings
   useEffect(() => {
     const fetchUserListings = async () => {
       const listingsRef = collection(db, 'listings')
@@ -81,7 +82,18 @@ function Profile() {
     }))
   }
 
-  const onDelete = () => {}
+  // Delete listing
+  const onDelete = async (listingId) => {
+    if(window.confirm('Are you sure you want to delete?')) {
+      // delete in firebase db
+      await deleteDoc(doc(db, 'listings', listingId))
+      // update the state to exclude that listing
+      const updatedListings = listings.filter((listing) => listing.id !== listingId)
+
+      setListings(updatedListings)
+      toast.success('Sucessfully deleted listing')
+    }
+  }
 
   return (
     <div className='profile'>
